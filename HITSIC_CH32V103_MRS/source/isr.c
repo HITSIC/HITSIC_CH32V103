@@ -5,7 +5,7 @@
 * Date               : 2020/04/30
 * Description        : Main Interrupt Service Routines.
 *******************************************************************************/
-#include "ch32v10x_it.h"
+#include "../component/debug.h"
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));

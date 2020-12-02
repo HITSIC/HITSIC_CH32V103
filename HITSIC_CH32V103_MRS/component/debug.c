@@ -6,7 +6,7 @@
 * Description        : This file contains all the functions prototypes for UART
 *                      Printf , Delay functions.
 *******************************************************************************/
-#include "debug.h"
+#include "../component/debug.h"
 
 static uint8_t  p_us=0;
 static uint16_t p_ms=0;
