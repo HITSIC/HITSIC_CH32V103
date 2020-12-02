@@ -1,4 +1,5 @@
 #include "board.h"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
@@ -51,7 +52,7 @@ void USART_Printf_Init(uint32_t baudrate)
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Tx;
 
-#if (DEBUG == DEBUG_UART1)
+#if (DEBUG_UART == DEBUG_UART1)
   USART_Init(USART1, &USART_InitStructure);
   USART_Cmd(USART1, ENABLE);
 
