@@ -1,0 +1,6 @@
+﻿*.o
+*.d
+*.mk
+*.map
+HITSIC_CH32V103_MRS/obj/makefile
+HITSIC_CH32V103_MRS/obj
