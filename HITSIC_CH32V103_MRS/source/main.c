@@ -17,6 +17,13 @@
 #include "board.h"
 #include "debug.h"
 
+#include "vector"
+
+extern "C" {
+    extern void __libc_init_array(void);
+}
+
+
 
 /* Global typedef */
 
@@ -31,14 +38,18 @@
 * Input          : None
 * Return         : None
 *******************************************************************************/
-int main(void)
+extern "C" int main(void)
 {
+    __libc_init_array();
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     Delay_Init();
 	USART_Printf_Init(115200);
-	printf("SystemClk:%d\r\n", SystemCoreClock);
+
+	std::vector<int> vecTest;
 
 	printf("This is printf example\r\n");
+
+	printf("SystemClk:%ld\r\n", SystemCoreClock);
 
 	while(1)
     {

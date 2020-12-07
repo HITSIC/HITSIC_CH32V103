@@ -16,8 +16,6 @@
  */
 #include "board.h"
 
-#define RETARGET_INST   (LPUART0)
-
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -78,7 +76,7 @@ int _read(int iFileHandle, char *pcBuffer, int iLength)
     return 0;
 }
 
-#if 0
+#if 1
 
 /* Provide prototypes for most of the _<systemcall> names that are
  provided in newlib for some compilers.  */
@@ -96,12 +94,39 @@ int _open(const char *name, int flags, int mode)
     return -1;
 }
 
+
+
+
+
+
+
+void _init(void)
+{
+
+}
+
+
 void _exit(void)
 {
     while (1);
 }
 
+void _sbrk(void)
+{
+    while (1);
+}
+
 void _kill(void)
+{
+
+}
+
+void _getpid(void)
+{
+
+}
+
+void _isatty(void)
 {
 
 }
