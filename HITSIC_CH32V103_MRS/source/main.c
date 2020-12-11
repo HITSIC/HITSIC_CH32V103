@@ -40,7 +40,8 @@ extern "C" {
 *******************************************************************************/
 extern "C" int main(void)
 {
-    __libc_init_array();
+    /** C++ 底层初始化 */
+    //__libc_init_array();//ResetISR似乎没有进行构造操作，我们手动进行。
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     Delay_Init();
 	USART_Printf_Init(115200);
@@ -53,7 +54,6 @@ extern "C" int main(void)
 
 	while(1)
     {
-
 	}
 }
 
