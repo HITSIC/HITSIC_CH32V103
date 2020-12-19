@@ -40,17 +40,17 @@ Project Configuration - 工程配置
     - Type：具体型号：根据需要选择。当前使用的是 CH32V103R8T6，我们选中它
   - 点击 `Finish`
 
-![image-20201219110836275](Project Configuration.assets/image-20201219110836275.png)
+![image-20201219110836275](figure/project_configuration/image-20201219110836275.png)
 
 - 工程建立后，工程目录如下：
 
-![image-20201219114129696](Project Configuration.assets/image-20201219114129696.png)
+![image-20201219114129696](figure/project_configuration/image-20201219114129696.png)
 
 ### 整理工作目录，配置路径
 
 推荐按照以下范式重新整理其工程结构。整理后，使用习惯贴近传统NXP工程。
 
-![image-20201219112221975](Project Configuration.assets/image-20201219112221975.png)
+![image-20201219112221975](figure/project_configuration/image-20201219112221975.png)
 
 - `board`：主控板的相关配置
 - `component`：组件。这里仅有`debug.c/h`
@@ -203,18 +203,18 @@ void _fstat(void)
 
 由于未知原因，MounRiver Studio创建的默认Moun_River工程竟然没有默认C++支持。
 
-![image-20201219114323948](Project Configuration.assets/image-20201219114323948.png)
+![image-20201219114323948](figure/project_configuration/image-20201219114323948.png)
 
 **为了使用C++相关功能，必须手动修改eclipse相关配置文件。**其原理简单描述为：对比Moun_River默认工程和RISC-V默认工程的配置文件获得。
 
 - 创建参考C++工程：
   - 菜单栏选择`File->New->Project`，在窗口中选择`C++ Project`
-  - 工程设置界面，选择Hello World RISC-V C++ Project，其他保持默认设置。完成后点击Next![image-20201219214409869](Project Configuration.assets/image-20201219214409869.png)
+  - 工程设置界面，选择Hello World RISC-V C++ Project，其他保持默认设置。完成后点击Next![image-20201219214409869](figure/project_configuration/image-20201219214409869.png)
   - 之后的`Basic Settings`，`Select Configuration`选项卡可以根据自己需要更改，不做强制要求。
-  - 工具链选择：在工具链选项卡中，选择`risc-none-embed-gcc`，之后点击Finish![image-20201219214841881](Project Configuration.assets/image-20201219214841881.png)
+  - 工具链选择：在工具链选项卡中，选择`risc-none-embed-gcc`，之后点击Finish![image-20201219214841881](figure/project_configuration/image-20201219214841881.png)
 
 - 对比工程，更改工程的`C/C++ Nature`
-  - 对比新创建的C++工程和默认的Moun_River工程，发现在`.project`文件中的`nature`项中，缺少C++ Nature，如图：![image-20201219215134518](Project Configuration.assets/image-20201219215134518.png) 
+  - 对比新创建的C++工程和默认的Moun_River工程，发现在`.project`文件中的`nature`项中，缺少C++ Nature，如图：![image-20201219215134518](figure/project_configuration/image-20201219215134518.png) 
 
 - 将这一行复制到Moun_River的`.project`的对应位置。
 
@@ -223,7 +223,7 @@ void _fstat(void)
 ```
 
 - 其它配置文件也会存在一些区别，但是不用手动更改。这是因为：更改完C++ Nature 后，再次打开eclipse工程属性后，eclipse会重新生成其他相关配置文件。
-- 关闭原始的Moun_River，之后重新打开工程。再次打开工程属性，发现Hack成功！![image-20201219215629028](Project Configuration.assets/image-20201219215629028.png)
+- 关闭原始的Moun_River，之后重新打开工程。再次打开工程属性，发现Hack成功！![image-20201219215629028](figure/project_configuration/image-20201219215629028.png)
 
 ### C/C++ Build 所有工程参数设置
 
@@ -237,25 +237,25 @@ void _fstat(void)
 
 - Target Processor
 
-![image-20201219221020828](Project Configuration.assets/image-20201219221020828.png)
+![image-20201219221020828](figure/project_configuration/image-20201219221020828.png)
 
 - Optimization
 
-  ![image-20201219220945717](Project Configuration.assets/image-20201219220945717.png)
+  ![image-20201219220945717](figure/project_configuration/image-20201219220945717.png)
 
 - Warning
 
-![image-20201219221134701](Project Configuration.assets/image-20201219221134701.png)
+![image-20201219221134701](figure/project_configuration/image-20201219221134701.png)
 
 - Debugging
 
-![image-20201219221204516](Project Configuration.assets/image-20201219221204516.png)
+![image-20201219221204516](figure/project_configuration/image-20201219221204516.png)
 
 - GNU RISC-V Cross C Compiler
 
   - Preprocessor
 
-    ![image-20201219222239437](Project Configuration.assets/image-20201219222239437.png)
+    ![image-20201219222239437](figure/project_configuration/image-20201219222239437.png)
 
   ```
   CPU_CH32V103R8T6
@@ -266,11 +266,11 @@ void _fstat(void)
 
   - Includes
 
-    ![image-20201219222339776](Project Configuration.assets/image-20201219222339776.png)
+    ![image-20201219222339776](figure/project_configuration/image-20201219222339776.png)
 
   - Optimization
 
-  ![image-20201219222439287](Project Configuration.assets/image-20201219222439287.png)
+  ![image-20201219222439287](figure/project_configuration/image-20201219222439287.png)
 
   ```
   -std=c++17 -fno-common -fmerge-constants -fmacro-prefix-map="../$(@D)/"=. -fno-excep
@@ -278,11 +278,11 @@ void _fstat(void)
 
   - Warning
 
-  ![image-20201219222504871](Project Configuration.assets/image-20201219222504871.png)
+  ![image-20201219222504871](figure/project_configuration/image-20201219222504871.png)
 
   - Miscellaneous
 
-    ![image-20201219222611207](Project Configuration.assets/image-20201219222611207.png)
+    ![image-20201219222611207](figure/project_configuration/image-20201219222611207.png)
 
     ```
     -c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -frtti -fno-exceptions 
@@ -294,7 +294,7 @@ void _fstat(void)
 
   - Optimization
 
-    ![image-20201219222753229](Project Configuration.assets/image-20201219222753229.png)
+    ![image-20201219222753229](figure/project_configuration/image-20201219222753229.png)
 
     ```
     -std=c++17 -fno-common -fmerge-constants -fmacro-prefix-map="../$(@D)/"=. -fn
@@ -304,11 +304,11 @@ void _fstat(void)
 
   - Warning
 
-  ![image-20201219222836175](Project Configuration.assets/image-20201219222836175.png)
+  ![image-20201219222836175](figure/project_configuration/image-20201219222836175.png)
 
   - Miscellaneous
 
-  ![image-20201219222902456](Project Configuration.assets/image-20201219222902456.png)
+  ![image-20201219222902456](figure/project_configuration/image-20201219222902456.png)
 
   ```
   -c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -frtti -fno-excep
@@ -318,17 +318,17 @@ void _fstat(void)
 
   - Libraries
 
-    ![image-20201219223106976](Project Configuration.assets/image-20201219223106976.png)
+    ![image-20201219223106976](figure/project_configuration/image-20201219223106976.png)
 
   - Miscellaneous
 
-  ![image-20201219223140495](Project Configuration.assets/image-20201219223140495.png)
+  ![image-20201219223140495](figure/project_configuration/image-20201219223140495.png)
 
 
 
 #### Toolchains
 
-![image-20201219223226366](Project Configuration.assets/image-20201219223226366.png)
+![image-20201219223226366](figure/project_configuration/image-20201219223226366.png)
 
 
 
