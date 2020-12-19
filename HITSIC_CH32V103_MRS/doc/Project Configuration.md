@@ -209,13 +209,16 @@ void _fstat(void)
 
 ![image-20201219114323948](Project Configuration.assets/image-20201219114323948.png)
 
-为了使用C++相关功能，必须手动修改eclipse相关配置文件。这一部分通过对比标准eclipse C++嵌入式工程的`.cproject`和MounRiver工程的`.cproject`获得。
+为了使用C++相关功能，必须手动修改eclipse相关配置文件。其原理简单描述为：对比Moun_River默认工程和RISC-V默认工程的配置文件获得。
 
+- 创建参考C++工程：
+  - 菜单栏选择`File->New->Project`，在窗口中选择`C++ Project`
+  - 工程设置界面，选择Hello World RISC-V C++ Project，其他保持默认设置。完成后点击Next![image-20201219214409869](Project Configuration.assets/image-20201219214409869.png)
+  - 之后的`Basic Settings`，`Select Configuration`选项卡可以根据自己需要更改，不做强制要求。
+  - 工具链选择：在工具链选项卡中，选择`risc-none-embed-gcc`，之后点击Finish![image-20201219214841881](Project Configuration.assets/image-20201219214841881.png)
 
+- 对比工程，更改工程的`C/C++ Nature`
+  - 对比新创建的C++工程和默认的Moun_River工程，发现在`.project`文件中的`nature`项中，缺少C++ Nature，如图：![image-20201219215134518](Project Configuration.assets/image-20201219215134518.png) 
 
-这一部分仍待进一步更新。
-
-> 具体步骤为：
->
-> - ~~将标准eclipse C++嵌入式工程的`.cproject`中存在，但是MounRiver工程的`.cproject`没有的语句复制进去。~~
-
+- 将这一行复制到Moun_River的`.project`的对应位置。
+- 关闭原始的Moun_River，之后重新打开工程。再次打开工程属性，发现Hack成功！
