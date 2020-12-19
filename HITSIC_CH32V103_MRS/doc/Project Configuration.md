@@ -1,10 +1,10 @@
-# Project Configuration - 工程配置
+Project Configuration - 工程配置
 
 本节介绍如何从创建一个新的WCH-CH32V103工程，并进行初步配置。
 
-- 简单食用：直接看“简单食用”一节，即可快速建立模板工程
-- 从零开始：利用Moun_River Studio从零建立一个CH32V103工程
-- 进阶技巧：一些trick
+- 简单食用：如果只想快速上手底层库，请直接看“简单食用”一节，即可快速建立模板工程
+- 从零开始：如果希望从零开始配置一个模板工程，请参阅本节，并利用Moun_River Studio从零建立一个CH32V103工程
+- 灾难恢复：如果发生灾难性工程属性配置错误，请参看“从零开始-C/C++ Build 所有工程参数设置”一节。
 
 [TOC]
 
@@ -199,17 +199,13 @@ void _fstat(void)
 
 - 移动UART写函数：移动`debug.c/h`中的函数`void USART_Printf_Init(uint32_t baudrate)`，`int _write(int fd, char *buf, int size)`至`board.c/h`中
 
-## 进阶技巧
+### 进阶技巧--开启C++支持
 
-本节介绍一些trick。
-
-### 开启C++支持
-
-由于未知原因，MounRiver Studio创建的工程竟然没有默认C++支持。
+由于未知原因，MounRiver Studio创建的默认Moun_River工程竟然没有默认C++支持。
 
 ![image-20201219114323948](Project Configuration.assets/image-20201219114323948.png)
 
-为了使用C++相关功能，必须手动修改eclipse相关配置文件。其原理简单描述为：对比Moun_River默认工程和RISC-V默认工程的配置文件获得。
+**为了使用C++相关功能，必须手动修改eclipse相关配置文件。**其原理简单描述为：对比Moun_River默认工程和RISC-V默认工程的配置文件获得。
 
 - 创建参考C++工程：
   - 菜单栏选择`File->New->Project`，在窗口中选择`C++ Project`
@@ -221,4 +217,121 @@ void _fstat(void)
   - 对比新创建的C++工程和默认的Moun_River工程，发现在`.project`文件中的`nature`项中，缺少C++ Nature，如图：![image-20201219215134518](Project Configuration.assets/image-20201219215134518.png) 
 
 - 将这一行复制到Moun_River的`.project`的对应位置。
-- 关闭原始的Moun_River，之后重新打开工程。再次打开工程属性，发现Hack成功！
+
+```js
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+```
+
+- 其它配置文件也会存在一些区别，但是不用手动更改。这是因为：更改完C++ Nature 后，再次打开eclipse工程属性后，eclipse会重新生成其他相关配置文件。
+- 关闭原始的Moun_River，之后重新打开工程。再次打开工程属性，发现Hack成功！![image-20201219215629028](Project Configuration.assets/image-20201219215629028.png)
+
+### C/C++ Build 所有工程参数设置
+
+请按照以下过程更改工程属性`Properties->C/C++ Build->Settings` 下的部分设置。
+
+这一部分也可用来在发生灾难性设置更改后恢复正常工程状态。
+
+#### Tool Settings
+
+本节只涉及可能改变的设置。其他未涉及的请保持默认。
+
+- Target Processor
+
+![image-20201219221020828](Project Configuration.assets/image-20201219221020828.png)
+
+- Optimization
+
+  ![image-20201219220945717](Project Configuration.assets/image-20201219220945717.png)
+
+- Warning
+
+![image-20201219221134701](Project Configuration.assets/image-20201219221134701.png)
+
+- Debugging
+
+![image-20201219221204516](Project Configuration.assets/image-20201219221204516.png)
+
+- GNU RISC-V Cross C Compiler
+
+  - Preprocessor
+
+    ![image-20201219222239437](Project Configuration.assets/image-20201219222239437.png)
+
+  ```
+  CPU_CH32V103R8T6
+  __NEWLIB__
+  I2C_RETRY_TIMES=32768
+  UART_RETRY_TIMES=32768
+  ```
+
+  - Includes
+
+    ![image-20201219222339776](Project Configuration.assets/image-20201219222339776.png)
+
+  - Optimization
+
+  ![image-20201219222439287](Project Configuration.assets/image-20201219222439287.png)
+
+  ```
+  -std=c++17 -fno-common -fmerge-constants -fmacro-prefix-map="../$(@D)/"=. -fno-excep
+  ```
+
+  - Warning
+
+  ![image-20201219222504871](Project Configuration.assets/image-20201219222504871.png)
+
+  - Miscellaneous
+
+    ![image-20201219222611207](Project Configuration.assets/image-20201219222611207.png)
+
+    ```
+    -c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -frtti -fno-exceptions 
+    ```
+
+    
+
+- GNU RISC-V Cross C++ Compiler
+
+  - Optimization
+
+    ![image-20201219222753229](Project Configuration.assets/image-20201219222753229.png)
+
+    ```
+    -std=c++17 -fno-common -fmerge-constants -fmacro-prefix-map="../$(@D)/"=. -fn
+    ```
+
+    
+
+  - Warning
+
+  ![image-20201219222836175](Project Configuration.assets/image-20201219222836175.png)
+
+  - Miscellaneous
+
+  ![image-20201219222902456](Project Configuration.assets/image-20201219222902456.png)
+
+  ```
+  -c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -frtti -fno-excep
+  ```
+
+- GUN RISC-V Cross C++ Linker
+
+  - Libraries
+
+    ![image-20201219223106976](Project Configuration.assets/image-20201219223106976.png)
+
+  - Miscellaneous
+
+  ![image-20201219223140495](Project Configuration.assets/image-20201219223140495.png)
+
+
+
+#### Toolchains
+
+![image-20201219223226366](Project Configuration.assets/image-20201219223226366.png)
+
+
+
+## Changelog
+
+- ver 1.0：by JerrySkywalker, 12/18/2020。完成“简单食用”和“从零开始”所有章节。
