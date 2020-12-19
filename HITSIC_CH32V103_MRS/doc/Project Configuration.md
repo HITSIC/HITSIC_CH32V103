@@ -1,4 +1,4 @@
-Project Configuration - 工程配置
+# Project Configuration - 工程配置
 
 本节介绍如何从创建一个新的WCH-CH32V103工程，并进行初步配置。
 
