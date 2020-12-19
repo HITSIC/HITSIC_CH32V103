@@ -46,7 +46,7 @@
   <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false" />
   <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2" />
   <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value="" />
-  <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\HITSIC_CH32V103_MRS.elf" />
+  <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="obj\HITSIC_CH32V103_MRS.elf" />
   <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="HITSIC_CH32V103_MRS" />
   <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true" />
   <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="" />
