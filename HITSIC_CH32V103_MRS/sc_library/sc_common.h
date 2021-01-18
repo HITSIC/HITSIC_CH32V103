@@ -11,6 +11,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*******************************************************************************
  * Version Control System
  ******************************************************************************/
@@ -183,5 +187,8 @@ typedef int32_t status_t;
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //HITSIC_CH32V103_MRS_SC_COMMON_H
