@@ -62,4 +62,4 @@ add_executable(HITSIC_CH32V103_MRS
         drivers/ch32v10x_wwdg.h
         source/isr.c
         source/main.cpp
-        source/syscalls.c)
+        source/syscalls.c sc_library/sc_common.h)
