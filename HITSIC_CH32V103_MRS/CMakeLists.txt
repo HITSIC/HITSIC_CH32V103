@@ -62,4 +62,12 @@ add_executable(HITSIC_CH32V103_MRS
         drivers/ch32v10x_wwdg.h
         source/isr.c
         source/main.cpp
-        source/syscalls.c sc_library/sc_common.h)
+        source/syscalls.c
+        sc_library/sc_common.h
+        sc_library/sc_common.cpp
+        sc_library/sc_spi.cpp
+        sc_library/sc_spi.h
+        sc_library/sc_i2c.cpp
+        sc_library/sc_i2c.h
+        sc_library/sc_uart.c
+        sc_library/sc_uart.h sc_library/sc_gpio.c sc_library/sc_gpio.h sc_library/sc_unit_test.h)
