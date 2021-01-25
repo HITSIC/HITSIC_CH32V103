@@ -17,12 +17,23 @@
 /* UART transfer state. */
 enum
 {
-    kUART_TxIdle,         /* TX idle. */
-    kUART_TxBusy,         /* TX busy. */
-    kUART_RxIdle,         /* RX idle. */
-    kUART_RxBusy,         /* RX busy. */
-    kUART_RxFramingError, /* Rx framing error */
-    kUART_RxParityError   /* Rx parity error */
+	/* TX idle. */
+	kUART_TxIdle,
+
+	/* TX busy. */
+	kUART_TxBusy,
+
+	/* RX idle. */
+	kUART_RxIdle,
+
+	/* RX busy. */
+	kUART_RxBusy,
+
+	/* Rx framing error */
+	kUART_RxFramingError,
+
+	/* Rx parity error */
+	kUART_RxParityError
 };
 
 
@@ -91,76 +102,131 @@ extern "C" {
  *
  * param config Pointer to configuration structure.
  */
-void UART_GetDefaultConfig(USART_InitTypeDef *config)
+void UART_GetDefaultConfig(USART_InitTypeDef* config)
 {
-    assert(config);
+	assert(config);
 
-    /* Initializes the configure structure to zero. */
-    (void)memset(config, 0, sizeof(*config));
+	/* Initializes the configure structure to zero. */
+	(void)memset(config, 0, sizeof(*config));
 
-    config->USART_BaudRate = 115200;
-    config->USART_WordLength = USART_WordLength_8b;
-    config->USART_StopBits = USART_StopBits_1;
-    config->USART_Parity = USART_Parity_No;
-    config->USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    config->USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
-
+	config->USART_BaudRate = 115200;
+	config->USART_WordLength = USART_WordLength_8b;
+	config->USART_StopBits = USART_StopBits_1;
+	config->USART_Parity = USART_Parity_No;
+	config->USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	config->USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
 }
 
-status_t UART_InitWithPins(USART_TypeDef *base, const USART_InitTypeDef *config, GPIO_Pin tx, GPIO_Pin rx) {
 
-    assert(config);
+/*!
+ * @brief	Init UART with selected pins.
+ * @param base USART1...USART3
+ * @param config configuration structure
+ * @param tx tx_pins
+ * @param rx rx_pins
+ * @return kStatusSuccess when success	
+ *	kStatusFail when choose unpaired TX-RX
+*/
+status_t UART_InitWithPins(USART_TypeDef* base, const USART_InitTypeDef* config, GPIO_Pin tx, GPIO_Pin rx)
+{
+	assert(config);
 
-    //Enable APB Main Clock
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+	//Enable APB Main Clock
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
-    /* Init USART pins (and possible pin remap), then enable APB USART*/
-    GPIO_InitTypeDef  tx_config, rx_config;
+	/* Init USART pins (and possible pin remap), then enable APB USART*/
+	GPIO_InitTypeDef tx_config, rx_config;
 
-    tx_config.GPIO_Speed = GPIO_Speed_50MHz;
-    tx_config.GPIO_Mode = GPIO_Mode_AF_PP;
+	tx_config.GPIO_Speed = GPIO_Speed_50MHz;
 
-    rx_config.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	rx_config.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 
-    if(USART1_BASE ==  base){
-        if(A9 == tx && A10 == rx)
-        {
-            GPIO_QuickInit(A9, kGPIO_DigitalOutput, 1, &tx_config);
-            GPIO_QuickInit(A10, kGPIO_DigitalInput, 1 ,&rx_config);
-        }
-        else if (B6 == tx && B7 == rx)
-        {
-            GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+	/**
+	    @attention  when use remap pins as USART output, you MUST choose GPIO_Mode_AF_PP instead of GPIO_Mode_Out_PP as its modes.
+	**/
+	if (USART1_BASE == base)
+	{
+		if (A9 == tx && A10 == rx)
+		{
+			tx_config.GPIO_Mode = GPIO_Mode_Out_PP;
 
-            GPIO_QuickInit(B6, kGPIO_DigitalOutput, 1, &tx_config);
-            GPIO_QuickInit(B7, kGPIO_DigitalInput, 1 ,&rx_config);
-        }
-        else
-        {
-            return kStatus_Fail;
-        }
+			GPIO_QuickInit(A9, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(A10, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else if (B6 == tx && B7 == rx)
+		{
+			GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
 
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-    }
-    else if(USART2_BASE ==  base){
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+			tx_config.GPIO_Mode = GPIO_Mode_AF_PP;
 
+			GPIO_QuickInit(B6, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(B7, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else
+		{
+			return kStatus_Fail;
+		}
 
-    }
-    else if(USART3_BASE ==  base)    {
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+	}
+	else if (USART2_BASE == base)
+	{
+		if (A2 == tx && A3 == rx)
+		{
+			tx_config.GPIO_Mode = GPIO_Mode_Out_PP;
 
+			GPIO_QuickInit(A2, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(A3, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else if (B6 == tx && B7 == rx)
+		{
+			GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
 
-    }
-    else{
-        return kStatus_Fail;
-    }
+			tx_config.GPIO_Mode = GPIO_Mode_AF_PP;
 
-    //Enable USART
-    USART_Init((USART_TypeDef*)base, config);
-    USART_Cmd((USART_TypeDef*)base, ENABLE);
+			GPIO_QuickInit(B10, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(B11, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else
+		{
+			return kStatus_Fail;
+		}
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+	}
+	else if (USART3_BASE == base)
+	{
+		if (A2 == tx && A3 == rx)
+		{
+			tx_config.GPIO_Mode = GPIO_Mode_Out_PP;
 
-    return kStatus_Success;
+			GPIO_QuickInit(B10, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(B11, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else if (B6 == tx && B7 == rx)
+		{
+			GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+
+			tx_config.GPIO_Mode = GPIO_Mode_AF_PP;
+
+			GPIO_QuickInit(C10, kGPIO_DigitalOutput, 1, &tx_config);
+			GPIO_QuickInit(C11, kGPIO_DigitalInput, 1, &rx_config);
+		}
+		else
+		{
+			return kStatus_Fail;
+		}
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+	}
+	else
+	{
+		return kStatus_Fail;
+	}
+
+	//Enable USART
+	USART_Init((USART_TypeDef*)base, config);
+	USART_Cmd((USART_TypeDef*)base, ENABLE);
+
+	return kStatus_Success;
 }
 
 
@@ -168,8 +234,8 @@ status_t UART_InitWithPins(USART_TypeDef *base, const USART_InitTypeDef *config,
 }
 #endif /* _cplusplus */
 
-void UART_PutChar(USART_TypeDef *base, uint8_t dat)
+void UART_PutChar(USART_TypeDef* base, uint8_t dat)
 {
-    while(((base)->STATR & USART_FLAG_TXE)==0);
-    (base)->DATAR = dat;
+	while (((base)->STATR & USART_FLAG_TXE) == 0);
+	(base)->DATAR = dat;
 }
