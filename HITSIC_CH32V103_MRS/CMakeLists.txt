@@ -8,6 +8,7 @@ include_directories(component)
 include_directories(Core)
 include_directories(device)
 include_directories(drivers)
+include_directories(sc_library)
 
 add_executable(HITSIC_CH32V103_MRS
         board/board.c
@@ -70,4 +71,7 @@ add_executable(HITSIC_CH32V103_MRS
         sc_library/sc_i2c.cpp
         sc_library/sc_i2c.h
         sc_library/sc_uart.c
-        sc_library/sc_uart.h sc_library/sc_gpio.c sc_library/sc_gpio.h sc_library/sc_unit_test.h)
+        sc_library/sc_uart.h 
+        sc_library/sc_gpio.c 
+        sc_library/sc_gpio.h 
+        sc_library/sc_unit_test.h)
