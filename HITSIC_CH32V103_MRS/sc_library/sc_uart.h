@@ -5,10 +5,8 @@
 #ifndef HITSIC_CH32V103_MRS_SC_UART_H
 #define HITSIC_CH32V103_MRS_SC_UART_H
 
-#include "sc_common.h"
-
 #include "ch32v10x_usart.h"
-
+#include "sc_common.h"
 #include "sc_gpio.h"
 /*!
  * @addtogroup uart_driver
@@ -197,9 +195,12 @@ extern "C" {
 #endif /* _cplusplus */
 
 void UART_GetDefaultConfig(USART_InitTypeDef *config);
-
 status_t UART_InitWithPins(USART_TypeDef *base, const USART_InitTypeDef *config, GPIO_Pin tx, GPIO_Pin rx) ;
-
+status_t UART_WriteBlocking(USART_TypeDef* base, const uint8_t* data, size_t length);
+static void UART_WriteNonBlocking(USART_TypeDef* base, const uint8_t* data, size_t length);
+status_t UART_ReadBlocking(USART_TypeDef* base, uint8_t* data, size_t length);
+static void UART_ReadNonBlocking(USART_TypeDef* base, uint8_t* data, size_t length);
+	
 void UART_PutChar(USART_TypeDef *base, uint8_t dat);
 
 #if defined(__cplusplus)
