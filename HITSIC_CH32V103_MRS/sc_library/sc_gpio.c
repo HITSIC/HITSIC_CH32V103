@@ -35,7 +35,6 @@
  */
 void GPIO_GetDefaultConfig_Output(GPIO_InitTypeDef *config)
 {
-    //config->GPIO_Pin = GPIO_Pin_All;    /*Usually we do not use this member to configure GPIO*/
     config->GPIO_Speed = GPIO_Speed_50MHz;
     config->GPIO_Mode = GPIO_Mode_Out_PP;
 }
@@ -66,8 +65,6 @@ void GPIO_GetDefaultConfig_Output(GPIO_InitTypeDef *config)
  */
 void GPIO_GetDefaultConfig_Input(GPIO_InitTypeDef *config)
 {
-    //config->GPIO_Pin = GPIO_Pin_All;    /*Usually we do not use this member to configure GPIO*/
-    //config->GPIO_Speed = GPIO_Speed_50MHz;
     config->GPIO_Mode = GPIO_Mode_IN_FLOATING;
 }
 
