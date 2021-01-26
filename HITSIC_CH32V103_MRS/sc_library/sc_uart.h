@@ -8,6 +8,9 @@
 #include "ch32v10x_usart.h"
 #include "sc_common.h"
 #include "sc_gpio.h"
+
+/*Marco for manage unfinished porting code */
+#define HITSIC_PORTING_UART 0U 
 /*!
  * @addtogroup uart_driver
  * @{
@@ -28,6 +31,7 @@
 #define UART_RETRY_TIMES 0U /* Defining to zero means to keep waiting for the flag until it is assert/deassert. */
 #endif
 
+#if HITSIC_PORTING_UART
 /*! @brief Error codes for the UART driver. */
 enum
 {
@@ -73,83 +77,83 @@ typedef enum _uart_idle_type_select
     kUART_IdleTypeStopBit  = 1U, /*!< Start counting after a stop bit. */
 } uart_idle_type_select_t;
 
-///*!
-// * @brief UART interrupt configuration structure, default settings all disabled.
-// *
-// * This structure contains the settings for all of the UART interrupt configurations.
-// */
-//enum _uart_interrupt_enable
-//{
-//#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
-//    kUART_LinBreakInterruptEnable = (UART_BDH_LBKDIE_MASK), /*!< LIN break detect interrupt. */
-//#endif
-//    kUART_RxActiveEdgeInterruptEnable         = (UART_BDH_RXEDGIE_MASK), /*!< RX active edge interrupt. */
-//    kUART_TxDataRegEmptyInterruptEnable       = (UART_C2_TIE_MASK << 8), /*!< Transmit data register empty interrupt. */
-//    kUART_TransmissionCompleteInterruptEnable = (UART_C2_TCIE_MASK << 8), /*!< Transmission complete interrupt. */
-//    kUART_RxDataRegFullInterruptEnable        = (UART_C2_RIE_MASK << 8),  /*!< Receiver data register full interrupt. */
-//    kUART_IdleLineInterruptEnable             = (UART_C2_ILIE_MASK << 8), /*!< Idle line interrupt. */
-//    kUART_RxOverrunInterruptEnable            = (UART_C3_ORIE_MASK << 16), /*!< Receiver overrun interrupt. */
-//    kUART_NoiseErrorInterruptEnable           = (UART_C3_NEIE_MASK << 16), /*!< Noise error flag interrupt. */
-//    kUART_FramingErrorInterruptEnable         = (UART_C3_FEIE_MASK << 16), /*!< Framing error flag interrupt. */
-//    kUART_ParityErrorInterruptEnable          = (UART_C3_PEIE_MASK << 16), /*!< Parity error flag interrupt. */
-//#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
-//    kUART_RxFifoOverflowInterruptEnable  = (UART_CFIFO_RXOFE_MASK << 24), /*!< RX FIFO overflow interrupt. */
-//    kUART_TxFifoOverflowInterruptEnable  = (UART_CFIFO_TXOFE_MASK << 24), /*!< TX FIFO overflow interrupt. */
-//    kUART_RxFifoUnderflowInterruptEnable = (UART_CFIFO_RXUFE_MASK << 24), /*!< RX FIFO underflow interrupt. */
-//#endif
-//    kUART_AllInterruptsEnable =
-//#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
-//kUART_LinBreakInterruptEnable |
-//#endif
-//kUART_RxActiveEdgeInterruptEnable | kUART_TxDataRegEmptyInterruptEnable |
-//kUART_TransmissionCompleteInterruptEnable | kUART_RxDataRegFullInterruptEnable | kUART_IdleLineInterruptEnable |
-//kUART_RxOverrunInterruptEnable | kUART_NoiseErrorInterruptEnable | kUART_FramingErrorInterruptEnable |
-//kUART_ParityErrorInterruptEnable
-//#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
-//    | kUART_RxFifoOverflowInterruptEnable | kUART_TxFifoOverflowInterruptEnable |
-//        kUART_RxFifoUnderflowInterruptEnable
-//#endif
-//    ,
-//};
+/*!
+ * @brief UART interrupt configuration structure, default settings all disabled.
+ *
+ * This structure contains the settings for all of the UART interrupt configurations.
+ */
+enum _uart_interrupt_enable
+{
+#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
+    kUART_LinBreakInterruptEnable = (UART_BDH_LBKDIE_MASK), /*!< LIN break detect interrupt. */
+#endif
+    kUART_RxActiveEdgeInterruptEnable         = (UART_BDH_RXEDGIE_MASK), /*!< RX active edge interrupt. */
+    kUART_TxDataRegEmptyInterruptEnable       = (UART_C2_TIE_MASK << 8), /*!< Transmit data register empty interrupt. */
+    kUART_TransmissionCompleteInterruptEnable = (UART_C2_TCIE_MASK << 8), /*!< Transmission complete interrupt. */
+    kUART_RxDataRegFullInterruptEnable        = (UART_C2_RIE_MASK << 8),  /*!< Receiver data register full interrupt. */
+    kUART_IdleLineInterruptEnable             = (UART_C2_ILIE_MASK << 8), /*!< Idle line interrupt. */
+    kUART_RxOverrunInterruptEnable            = (UART_C3_ORIE_MASK << 16), /*!< Receiver overrun interrupt. */
+    kUART_NoiseErrorInterruptEnable           = (UART_C3_NEIE_MASK << 16), /*!< Noise error flag interrupt. */
+    kUART_FramingErrorInterruptEnable         = (UART_C3_FEIE_MASK << 16), /*!< Framing error flag interrupt. */
+    kUART_ParityErrorInterruptEnable          = (UART_C3_PEIE_MASK << 16), /*!< Parity error flag interrupt. */
+#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
+    kUART_RxFifoOverflowInterruptEnable  = (UART_CFIFO_RXOFE_MASK << 24), /*!< RX FIFO overflow interrupt. */
+    kUART_TxFifoOverflowInterruptEnable  = (UART_CFIFO_TXOFE_MASK << 24), /*!< TX FIFO overflow interrupt. */
+    kUART_RxFifoUnderflowInterruptEnable = (UART_CFIFO_RXUFE_MASK << 24), /*!< RX FIFO underflow interrupt. */
+#endif
+    kUART_AllInterruptsEnable =
+#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
+kUART_LinBreakInterruptEnable |
+#endif
+kUART_RxActiveEdgeInterruptEnable | kUART_TxDataRegEmptyInterruptEnable |
+kUART_TransmissionCompleteInterruptEnable | kUART_RxDataRegFullInterruptEnable | kUART_IdleLineInterruptEnable |
+kUART_RxOverrunInterruptEnable | kUART_NoiseErrorInterruptEnable | kUART_FramingErrorInterruptEnable |
+kUART_ParityErrorInterruptEnable
+#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
+    | kUART_RxFifoOverflowInterruptEnable | kUART_TxFifoOverflowInterruptEnable |
+        kUART_RxFifoUnderflowInterruptEnable
+#endif
+    ,
+};
 
-///*!
-// * @brief UART status flags.
-// *
-// * This provides constants for the UART status flags for use in the UART functions.
-// */
-//enum _uart_flags
-//{
-//    kUART_TxDataRegEmptyFlag       = (UART_S1_TDRE_MASK), /*!< TX data register empty flag. */
-//    kUART_TransmissionCompleteFlag = (UART_S1_TC_MASK),   /*!< Transmission complete flag. */
-//    kUART_RxDataRegFullFlag        = (UART_S1_RDRF_MASK), /*!< RX data register full flag. */
-//    kUART_IdleLineFlag             = (UART_S1_IDLE_MASK), /*!< Idle line detect flag. */
-//    kUART_RxOverrunFlag            = (UART_S1_OR_MASK),   /*!< RX overrun flag. */
-//    kUART_NoiseErrorFlag           = (UART_S1_NF_MASK),   /*!< RX takes 3 samples of each received bit.
-//                                                               If any of these samples differ, noise flag sets */
-//    kUART_FramingErrorFlag = (UART_S1_FE_MASK),           /*!< Frame error flag, sets if logic 0 was detected
-//                                                               where stop bit expected */
-//    kUART_ParityErrorFlag = (UART_S1_PF_MASK),            /*!< If parity enabled, sets upon parity error detection */
-//#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
-//    kUART_LinBreakFlag =
-//        (UART_S2_LBKDIF_MASK
-//         << 8), /*!< LIN break detect interrupt flag, sets when LIN break char detected and LIN circuit enabled */
-//#endif
-//    kUART_RxActiveEdgeFlag =
-//    (UART_S2_RXEDGIF_MASK << 8), /*!< RX pin active edge interrupt flag,sets when active edge detected */
-//    kUART_RxActiveFlag =
-//    (UART_S2_RAF_MASK << 8), /*!< Receiver Active Flag (RAF), sets at beginning of valid start bit */
-//#if defined(WCH_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS) && WCH_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS
-//    kUART_NoiseErrorInRxDataRegFlag  = (UART_ED_NOISY_MASK << 16),   /*!< Noisy bit, sets if noise detected. */
-//    kUART_ParityErrorInRxDataRegFlag = (UART_ED_PARITYE_MASK << 16), /*!< Parity bit, sets if parity error detected. */
-//#endif
-//#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
-//    kUART_TxFifoEmptyFlag     = (int)(UART_SFIFO_TXEMPT_MASK << 24), /*!< TXEMPT bit, sets if TX buffer is empty */
-//    kUART_RxFifoEmptyFlag     = (UART_SFIFO_RXEMPT_MASK << 24),      /*!< RXEMPT bit, sets if RX buffer is empty */
-//    kUART_TxFifoOverflowFlag  = (UART_SFIFO_TXOF_MASK << 24), /*!< TXOF bit, sets if TX buffer overflow occurred */
-//    kUART_RxFifoOverflowFlag  = (UART_SFIFO_RXOF_MASK << 24), /*!< RXOF bit, sets if receive buffer overflow */
-//    kUART_RxFifoUnderflowFlag = (UART_SFIFO_RXUF_MASK << 24), /*!< RXUF bit, sets if receive buffer underflow */
-//#endif
-//};
+/*!
+ * @brief UART status flags.
+ *
+ * This provides constants for the UART status flags for use in the UART functions.
+ */
+enum _uart_flags
+{
+    kUART_TxDataRegEmptyFlag       = (UART_S1_TDRE_MASK), /*!< TX data register empty flag. */
+    kUART_TransmissionCompleteFlag = (UART_S1_TC_MASK),   /*!< Transmission complete flag. */
+    kUART_RxDataRegFullFlag        = (UART_S1_RDRF_MASK), /*!< RX data register full flag. */
+    kUART_IdleLineFlag             = (UART_S1_IDLE_MASK), /*!< Idle line detect flag. */
+    kUART_RxOverrunFlag            = (UART_S1_OR_MASK),   /*!< RX overrun flag. */
+    kUART_NoiseErrorFlag           = (UART_S1_NF_MASK),   /*!< RX takes 3 samples of each received bit.
+                                                               If any of these samples differ, noise flag sets */
+    kUART_FramingErrorFlag = (UART_S1_FE_MASK),           /*!< Frame error flag, sets if logic 0 was detected
+                                                               where stop bit expected */
+    kUART_ParityErrorFlag = (UART_S1_PF_MASK),            /*!< If parity enabled, sets upon parity error detection */
+#if defined(WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT) && WCH_FEATURE_UART_HAS_LIN_BREAK_DETECT
+    kUART_LinBreakFlag =
+        (UART_S2_LBKDIF_MASK
+         << 8), /*!< LIN break detect interrupt flag, sets when LIN break char detected and LIN circuit enabled */
+#endif
+    kUART_RxActiveEdgeFlag =
+    (UART_S2_RXEDGIF_MASK << 8), /*!< RX pin active edge interrupt flag,sets when active edge detected */
+    kUART_RxActiveFlag =
+    (UART_S2_RAF_MASK << 8), /*!< Receiver Active Flag (RAF), sets at beginning of valid start bit */
+#if defined(WCH_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS) && WCH_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS
+    kUART_NoiseErrorInRxDataRegFlag  = (UART_ED_NOISY_MASK << 16),   /*!< Noisy bit, sets if noise detected. */
+    kUART_ParityErrorInRxDataRegFlag = (UART_ED_PARITYE_MASK << 16), /*!< Parity bit, sets if parity error detected. */
+#endif
+#if defined(WCH_FEATURE_UART_HAS_FIFO) && WCH_FEATURE_UART_HAS_FIFO
+    kUART_TxFifoEmptyFlag     = (int)(UART_SFIFO_TXEMPT_MASK << 24), /*!< TXEMPT bit, sets if TX buffer is empty */
+    kUART_RxFifoEmptyFlag     = (UART_SFIFO_RXEMPT_MASK << 24),      /*!< RXEMPT bit, sets if RX buffer is empty */
+    kUART_TxFifoOverflowFlag  = (UART_SFIFO_TXOF_MASK << 24), /*!< TXOF bit, sets if TX buffer overflow occurred */
+    kUART_RxFifoOverflowFlag  = (UART_SFIFO_RXOF_MASK << 24), /*!< RXOF bit, sets if receive buffer overflow */
+    kUART_RxFifoUnderflowFlag = (UART_SFIFO_RXUF_MASK << 24), /*!< RXUF bit, sets if receive buffer underflow */
+#endif
+};
 
 /*! @brief UART transfer structure. */
 typedef struct _uart_transfer
@@ -186,6 +190,7 @@ struct _uart_handle
     volatile uint8_t rxState; /*!< RX transfer state */
 };
 
+#endif
 /*******************************************************************************
  * API
  ******************************************************************************/
