@@ -92,7 +92,17 @@ status_t SPI_MasterInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* master
 
 void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig)
 {
-	
+	masterConfig->SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+	masterConfig->SPI_Mode = SPI_Mode_Master;
+	masterConfig->SPI_DataSize = SPI_DataSize_8b;
+
+	masterConfig->SPI_CPOL = SPI_CPOL_Low;                      
+	masterConfig->SPI_CPHA = SPI_CPHA_1Edge;
+
+	masterConfig->SPI_NSS = SPI_NSS_Soft;                               
+	masterConfig->SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;       //Default Configuration
+	masterConfig->SPI_FirstBit = SPI_FirstBit_MSB;                      
+	masterConfig->SPI_CRCPolynomial = 7;
 }
 
 void SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig)
