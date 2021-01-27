@@ -422,10 +422,106 @@ struct _dspi_master_handle
 extern "C" {
 #endif /*_cplusplus*/
 
-    /*Transactional APIs -- Master*/
+    status_t SPI_MasterInit(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig);
+
+    status_t SPI_MasterInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig,
+        const GPIO_Pin sck_pin,
+        const GPIO_Pin mosi_pin,
+        const GPIO_Pin miso_pin,
+        const GPIO_Pin cs_pin);
+
+    void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig);
+
+    void SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig);
+
+    void SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig,
+        const GPIO_Pin sck_pin,
+        const GPIO_Pin mosi_pin,
+        const GPIO_Pin miso_pin,
+        const GPIO_Pin cs_pin);
+
+    void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig);
+
+    static inline SPI_Enable(SPI_TypeDef* base);
+
+    /*!
+     * @name Status
+     * @{
+     */
+
+    static inline uint32_t SPI_GetStatusFlags(SPI_TypeDef* base)
+    {
+        return (base->STATR);
+    }
+
+    /*!
+	 * @brief Clears the SPI status flag.
+	 *
+	 * This function  clears the desired status bit by using a write-1-to-clear. The user passes in the base and the
+	 * desired status bit to clear.  The list of status bits is defined in the <b>dspi_status_and_interrupt_request_t</b>.
+	 * The function uses these bit positions in its algorithm to clear the desired flag state. This is an example.
+	 *
+	 * @code
+	 *  SPI_ClearStatusFlags(base, );
+	 * @endcode
+	 *
+	 * @param base DSPI peripheral address.
+	 * @param statusFlags The status flag used from the type dspi_flags.
+	 */
+    static inline void SPI_ClearStatusFlags(SPI_TypeDef* base, uint32_t statusFlags)
+    {
+        base->STATR = statusFlags; /*!< The status flags are cleared by writing 1 (w1c).*/
+    }
+
+    /*!
+	*@}
+	 */
+
+	/*!
+	* @name Interrupts
+	* @{
+	*/
+
+    /*! @note Please use WCH APIs to manage SPI interrupts.**/
+	
+	/*!
+	*@}
+	*/
+
+    /*!
+	* @name DMA Control
+	* @{
+	*/
+
+	/*! @note Please use WCH APIs to manage SPI DMA Control. This section waits for further discussion.**/
+
+	/*!
+	*@}
+	*/
+
+    /*!
+	* @name BUS Operations
+	*/
+
+	/*! @note Please use WCH APIs to manage SPI BUS Operations. This section waits for further discussion.**/
+
+	/*!
+	*@}
+	*/
+	
+
+    /*!
+	 * @name Transactional APIs
+	 * @{
+	 */
 
 	
+    /*Transactional APIs -- Master*/
+
    
+
+
+	
 
 #if defined(__cplusplus)
 }
