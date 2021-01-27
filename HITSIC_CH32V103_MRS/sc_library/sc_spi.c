@@ -6,11 +6,24 @@
 #include "sc_spi.h"
 #include "sc_common.h"
 
+#include "assert.h"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /*_cplusplus*/
 
-status_t SPI_MasterInit(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig)
+/*******************************************************************************
+ * Variables
+ ******************************************************************************/
+
+static SPI_TypeDef* const s_spiBases[] = {SPI1_BASE, SPI2_BASE};
+
+
+/**********************************************************************************************************************
+ * Code
+ *********************************************************************************************************************/
+
+status_t SPI_MasterInit(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig)
 {
 	/**Init APB Clock**/
 	if ((SPI_TypeDef*)SPI1_BASE == base)
@@ -29,7 +42,7 @@ status_t SPI_MasterInit(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig)
 	return kStatus_Success;
 }
 
-status_t SPI_MasterInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig, 
+status_t SPI_MasterInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig, 
 	const GPIO_Pin sck_pin,
 	const GPIO_Pin mosi_pin, 
 	const GPIO_Pin miso_pin, 
@@ -105,7 +118,7 @@ void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig)
 	masterConfig->SPI_CRCPolynomial = 7;
 }
 
-status_t SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig)
+status_t SPI_SlaveInit(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig)
 {
 	/**Init APB Clock**/
 	if ((SPI_TypeDef*)SPI1_BASE == base)
@@ -124,7 +137,7 @@ status_t SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig)
 	return kStatus_Success;
 }
 
-status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig,
+status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
 	const GPIO_Pin sck_pin,
 	const GPIO_Pin mosi_pin,
 	const GPIO_Pin miso_pin,
@@ -179,7 +192,7 @@ status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveCo
 	}
 	else return kStatus_Fail;
 
-	SPI_Init(base, slaveConfig);
+	SPI_Init((SPI_TypeDef*)base, slaveConfig);
 	SPI_Cmd(base, ENABLE);
 
 	return kStatus_Success;
@@ -201,6 +214,31 @@ void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig)
 }
 	
 
+/*!
+* @name BUS Operations
+*/
+	
+uint32_t SPI_GetInstance(SPI_TypeDef* base)
+{
+	uint32_t instance;
+
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_spiBases); instance++)
+	{
+		if (s_spiBases[instance] == base)
+		{
+			break;
+		}
+	}
+
+	assert(instance < ARRAY_SIZE(s_spiBases));
+
+	return instance;
+}
+
+/*!
+* @name BUS Operations
+*/
 	
 #if defined(__cplusplus)
 }

@@ -422,9 +422,14 @@ struct _dspi_master_handle
 extern "C" {
 #endif /*_cplusplus*/
 
-    status_t SPI_MasterInit(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig);
+    /*!
+	 * @name Initialization
+	 * @{
+	 */
 
-    status_t SPI_MasterInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* masterConfig,
+    status_t SPI_MasterInit(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig);
+
+    status_t SPI_MasterInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig,
         const GPIO_Pin sck_pin,
         const GPIO_Pin mosi_pin,
         const GPIO_Pin miso_pin,
@@ -432,9 +437,9 @@ extern "C" {
 
     void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig);
 
-    status_t SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig);
+    status_t SPI_SlaveInit(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig);
 
-    status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig,
+    status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
         const GPIO_Pin sck_pin,
         const GPIO_Pin mosi_pin,
         const GPIO_Pin miso_pin,
@@ -442,8 +447,11 @@ extern "C" {
 
     void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig);
 
-    static inline SPI_Enable(SPI_TypeDef* base);
-
+    /*!
+	 * @}
+	 */
+	
+	
     /*!
      * @name Status
      * @{
@@ -505,6 +513,15 @@ extern "C" {
 
 	/*! @note Please use WCH APIs to manage SPI BUS Operations. This section waits for further discussion.**/
 
+    /*!
+	 * @brief Get instance number for DSPI module.
+	 *
+	 * @param base SPI peripheral base address
+	 *
+	 * @return SPI peripheral instance number
+	 */
+    uint32_t SPI_GetInstance(SPI_TypeDef* base);
+	
 	/*!
 	*@}
 	*/
