@@ -432,9 +432,9 @@ extern "C" {
 
     void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig);
 
-    void SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig);
+    status_t SPI_SlaveInit(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig);
 
-    void SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig,
+    status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, const SPI_InitTypeDef* slaveConfig,
         const GPIO_Pin sck_pin,
         const GPIO_Pin mosi_pin,
         const GPIO_Pin miso_pin,
