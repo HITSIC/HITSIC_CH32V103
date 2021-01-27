@@ -2,6 +2,7 @@
 // Created by jerry on 2021/1/15.
 //
 
+// ReSharper disable CppIntegralToPointerConversion
 #include "ch32v10x_spi.h"
 #include "sc_spi.h"
 #include "sc_common.h"
@@ -59,11 +60,8 @@ status_t SPI_MasterInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig
 	}
 
 	/** GPIO Config **/
-	GPIO_InitTypeDef gpio_in_config, gpio_out_config;
-
-	gpio_in_config.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	gpio_out_config.GPIO_Mode = GPIO_Mode_AF_PP;
-	gpio_out_config.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitTypeDef gpio_in_config = { PIN_NULL, GPIO_Speed_50MHz, GPIO_Mode_IN_FLOATING };
+	GPIO_InitTypeDef gpio_out_config = { PIN_NULL, GPIO_Speed_50MHz, GPIO_Mode_AF_PP };
 
 	GPIO_QuickInit(cs_pin, kGPIO_DigitalOutput, 1, &gpio_out_config);
 	if ((SPI_TypeDef*)SPI1_BASE == base)
@@ -153,12 +151,8 @@ status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2 | RCC_APB2Periph_AFIO, ENABLE);
 	}
 
-	/** GPIO Config **/
-	GPIO_InitTypeDef gpio_in_config, gpio_out_config;
-
-	gpio_in_config.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	gpio_out_config.GPIO_Mode = GPIO_Mode_AF_PP;
-	gpio_out_config.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitTypeDef gpio_in_config = {PIN_NULL, GPIO_Speed_50MHz, GPIO_Mode_IN_FLOATING };
+	GPIO_InitTypeDef gpio_out_config = { PIN_NULL, GPIO_Speed_50MHz, GPIO_Mode_AF_PP };
 
 	GPIO_QuickInit(cs_pin, kGPIO_DigitalOutput, 1, &gpio_in_config);
 	if ((SPI_TypeDef*)SPI1_BASE == base)
@@ -192,7 +186,7 @@ status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
 	}
 	else return kStatus_Fail;
 
-	SPI_Init((SPI_TypeDef*)base, slaveConfig);
+	SPI_Init(base, slaveConfig);
 	SPI_Cmd(base, ENABLE);
 
 	return kStatus_Success;
@@ -231,7 +225,7 @@ uint32_t SPI_GetInstance(SPI_TypeDef* base)
 		}
 	}
 
-	assert(instance < ARRAY_SIZE(s_spiBases));
+	assert(instance < ARRAY_SIZE(s_spiBases));  // NOLINT(bugprone-sizeof-expression)
 
 	return instance;
 }
