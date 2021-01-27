@@ -177,6 +177,10 @@ handle_reset:
   ori t0, t0, 1
 	csrw mtvec, t0
 
+  /* 尝试在汇编中调用构造，by C.M. */
+  jal __libc_init_array
+  /* 结束，FIXME */
+
   jal  SystemInit
 	la t0, main
 	csrw mepc, t0
