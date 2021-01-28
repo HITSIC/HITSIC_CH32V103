@@ -367,7 +367,7 @@ struct _dspi_slave_handle
 #endif
 
 /*! @brief DSPI master/slave transfer structure.*/
-typedef struct _dspi_transfer
+typedef struct _spi_transfer
 {
 	uint8_t* txData; /*!< Send buffer. */
 	uint8_t* rxData; /*!< Receive buffer. */
@@ -376,12 +376,12 @@ typedef struct _dspi_transfer
 	uint32_t configFlags; /*!< Transfer transfer configuration flags. Set from @ref
                              _dspi_transfer_config_flag_for_master if the transfer is used for master or @ref
                              _dspi_transfer_config_flag_for_slave enumeration if the transfer is used for slave.*/
-} dspi_transfer_t;
+} spi_transfer_t;
 
 /*!
  * @brief Forward declaration of the @ref _dspi_master_handle typedefs.
  */
-typedef struct _dspi_master_handle dspi_master_handle_t; /*!< The master handle. */
+typedef struct _spi_master_handle spi_master_handle_t; /*!< The master handle. */  // NOLINT(bugprone-reserved-identifier)
 
 /*!
  * @brief Completion callback function pointer type.
@@ -391,13 +391,13 @@ typedef struct _dspi_master_handle dspi_master_handle_t; /*!< The master handle.
  * @param status Success or error code describing whether the transfer completed.
  * @param userData Arbitrary pointer-dataSized value passed from the application.
  */
-typedef void (*dspi_master_transfer_callback_t)(SPI_TypeDef* base,
-                                                dspi_master_handle_t* handle,
+typedef void (*spi_master_transfer_callback_t)(SPI_TypeDef* base,
+                                                spi_master_handle_t* handle,
                                                 status_t status,
                                                 void* userData);
 
 /*! @brief DSPI master transfer handle structure used for transactional API. */
-struct _dspi_master_handle
+struct _spi_master_handle
 {
 	uint32_t bitsPerFrame; /*!< The desired number of bits per frame. */
 	volatile uint32_t command; /*!< The desired data command. */
@@ -415,9 +415,9 @@ struct _dspi_master_handle
 	volatile size_t remainingReceiveByteCount; /*!< A number of bytes remaining to receive.*/
 	size_t totalByteCount; /*!< A number of transfer bytes*/
 
-	volatile uint8_t state; /*!< DSPI transfer state, see @ref _dspi_transfer_state.*/
+	volatile uint8_t state; /*!< SPI transfer state, see @ref _dspi_transfer_state.*/
 
-	dspi_master_transfer_callback_t callback; /*!< Completion callback. */
+	spi_master_transfer_callback_t callback; /*!< Completion callback. */
 	void* userData; /*!< Callback user data. */
 };
 
@@ -544,6 +544,17 @@ static inline void SPI_ClearStatusFlags(SPI_TypeDef* base, uint32_t statusFlags)
 
 
 /*Transactional APIs -- Master*/
+
+#if HITSIC_PORTING_SPI
+
+void DSPI_MasterTransferCreateHandle(SPI_TypeDef* base,
+    spi_master_handle_t* handle,
+    spi_master_transfer_callback_t callback,
+    void* userData);
+
+#endif
+	
+status_t SPI_MasterTransferBlocking(SPI_TypeDef* base, spi_transfer_t* transfer);
 
 
 #if defined(__cplusplus)

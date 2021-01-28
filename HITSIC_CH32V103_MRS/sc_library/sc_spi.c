@@ -22,6 +22,9 @@ static const SPI_TypeDef* s_spiBases[] = {SPI1_BASE, SPI2_BASE};
 /* @brief Dummy data for each instance. This data is used when user's tx buffer is NULL*/
 volatile uint8_t g_spiDummyData[ARRAY_SIZE(s_spiBases)] = { 0 };
 
+/*! @brief Pointers to dspi handles for each instance. */
+static void* g_spiHandle[ARRAY_SIZE(s_spiBases)];
+
 /**********************************************************************************************************************
  * Code
  *********************************************************************************************************************/
@@ -279,9 +282,52 @@ void SPI_Deinit(SPI_TypeDef* base)
 * @name BUS Operations
 */
 	
+/*Transactional APIs -- Master*/
 
+#if HITSIC_PORTING_SPI
+/*!
+ * @brief Initializes the SPI master handle.
+ *
+ * This function initializes the SPI handle, which can be used for other SPI transactional APIs.  Usually, for a
+ * specified SPI instance,  call this API once to get the initialized handle.
+ *
+ * @param base SPI peripheral base address.
+ * @param handle SPI handle pointer to dspi_master_handle_t.
+ * @param callback SPI callback.
+ * @param userData Callback function parameter.
+ */
+void DSPI_MasterTransferCreateHandle(SPI_TypeDef* base,
+	spi_master_handle_t* handle,
+	spi_master_transfer_callback_t callback,
+	void* userData)
+{
+	assert(NULL != handle);
 
+	/* Zero the handle. */
+	(void)memset(handle, 0, sizeof(*handle));
 
+	g_spiHandle[SPI_GetInstance(base)] = handle;
+
+	handle->callback = callback;
+	handle->userData = userData;
+}
+
+#endif
+
+status_t SPI_MasterTransferBlocking(SPI_TypeDef* base, spi_transfer_t* transfer)
+{
+	while (transfer->dataSize--)
+	{
+		while (((base)->STATR & SPI_I2S_FLAG_TXE) == RESET);
+		((SPI_TypeDef*)(base))->DATAR = *(transfer->txData++);
+		if (NULL != transfer->rxData)
+		{
+			while ((((SPI_TypeDef*)(base))->STATR & SPI_I2S_FLAG_RXNE) == RESET);
+			*(transfer->rxData++) = ((SPI_TypeDef*)(base))->DATAR;
+		}
+	}
+	return kStatus_Success;
+}
 
 	
 #if defined(__cplusplus)
