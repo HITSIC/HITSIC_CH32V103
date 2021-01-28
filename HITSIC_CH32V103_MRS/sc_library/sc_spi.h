@@ -21,13 +21,13 @@
 extern "C" {
 #endif /*_cplusplus*/
 
- /**********************************************************************************************************************
-  * Definitions
-  *********************************************************************************************************************/
+/**********************************************************************************************************************
+ * Definitions
+ *********************************************************************************************************************/
 
-  /*! @name Driver version */
-  /*@{*/
-  /*! @brief SPI driver version 2.2.4. */
+/*! @name Driver version */
+/*@{*/
+/*! @brief SPI driver version 2.2.4. */
 #define WCH_SPI_DRIVER_VERSION (MAKE_VERSION(1, 0, 0))
 /*@}*/
 
@@ -42,10 +42,13 @@ extern volatile uint8_t g_spiDummyData[];
 /*! @brief Status for the DSPI driver.*/
 enum
 {
-    kStatus_SPI_Busy = MAKE_STATUS(kStatusGroup_DSPI, 0), /*!< DSPI transfer is busy.*/
-    kStatus_SPI_Error = MAKE_STATUS(kStatusGroup_DSPI, 1), /*!< DSPI driver error. */
-    kStatus_SPI_Idle = MAKE_STATUS(kStatusGroup_DSPI, 2), /*!< DSPI is idle.*/
-    kStatus_SPI_OutOfRange = MAKE_STATUS(kStatusGroup_DSPI, 3)  /*!< DSPI transfer out of range. */
+	kStatus_SPI_Busy = MAKE_STATUS(kStatusGroup_DSPI, 0),
+	/*!< DSPI transfer is busy.*/
+	kStatus_SPI_Error = MAKE_STATUS(kStatusGroup_DSPI, 1),
+	/*!< DSPI driver error. */
+	kStatus_SPI_Idle = MAKE_STATUS(kStatusGroup_DSPI, 2),
+	/*!< DSPI is idle.*/
+	kStatus_SPI_OutOfRange = MAKE_STATUS(kStatusGroup_DSPI, 3) /*!< DSPI transfer out of range. */
 };
 
 #if HITSIC_PORTING_SPI
@@ -366,11 +369,11 @@ struct _dspi_slave_handle
 /*! @brief DSPI master/slave transfer structure.*/
 typedef struct _dspi_transfer
 {
-    uint8_t* txData;          /*!< Send buffer. */
-    uint8_t* rxData;          /*!< Receive buffer. */
-    volatile size_t dataSize; /*!< Transfer bytes. */
+	uint8_t* txData; /*!< Send buffer. */
+	uint8_t* rxData; /*!< Receive buffer. */
+	volatile size_t dataSize; /*!< Transfer bytes. */
 
-    uint32_t configFlags; /*!< Transfer transfer configuration flags. Set from @ref
+	uint32_t configFlags; /*!< Transfer transfer configuration flags. Set from @ref
                              _dspi_transfer_config_flag_for_master if the transfer is used for master or @ref
                              _dspi_transfer_config_flag_for_slave enumeration if the transfer is used for slave.*/
 } dspi_transfer_t;
@@ -389,33 +392,33 @@ typedef struct _dspi_master_handle dspi_master_handle_t; /*!< The master handle.
  * @param userData Arbitrary pointer-dataSized value passed from the application.
  */
 typedef void (*dspi_master_transfer_callback_t)(SPI_TypeDef* base,
-    dspi_master_handle_t* handle,
-    status_t status,
-    void* userData);
+                                                dspi_master_handle_t* handle,
+                                                status_t status,
+                                                void* userData);
 
 /*! @brief DSPI master transfer handle structure used for transactional API. */
 struct _dspi_master_handle
 {
-    uint32_t bitsPerFrame;         /*!< The desired number of bits per frame. */
-    volatile uint32_t command;     /*!< The desired data command. */
-    volatile uint32_t lastCommand; /*!< The desired last data command. */
+	uint32_t bitsPerFrame; /*!< The desired number of bits per frame. */
+	volatile uint32_t command; /*!< The desired data command. */
+	volatile uint32_t lastCommand; /*!< The desired last data command. */
 
-    uint8_t fifoSize; /*!< FIFO dataSize. */
+	uint8_t fifoSize; /*!< FIFO dataSize. */
 
-    volatile bool
-        isPcsActiveAfterTransfer;   /*!< Indicates whether the PCS signal is active after the last frame transfer.*/
-    volatile bool isThereExtraByte; /*!< Indicates whether there are extra bytes.*/
+	volatile bool
+	isPcsActiveAfterTransfer; /*!< Indicates whether the PCS signal is active after the last frame transfer.*/
+	volatile bool isThereExtraByte; /*!< Indicates whether there are extra bytes.*/
 
-    uint8_t* volatile txData;                  /*!< Send buffer. */
-    uint8_t* volatile rxData;                  /*!< Receive buffer. */
-    volatile size_t remainingSendByteCount;    /*!< A number of bytes remaining to send.*/
-    volatile size_t remainingReceiveByteCount; /*!< A number of bytes remaining to receive.*/
-    size_t totalByteCount;                     /*!< A number of transfer bytes*/
+	uint8_t* volatile txData; /*!< Send buffer. */
+	uint8_t* volatile rxData; /*!< Receive buffer. */
+	volatile size_t remainingSendByteCount; /*!< A number of bytes remaining to send.*/
+	volatile size_t remainingReceiveByteCount; /*!< A number of bytes remaining to receive.*/
+	size_t totalByteCount; /*!< A number of transfer bytes*/
 
-    volatile uint8_t state; /*!< DSPI transfer state, see @ref _dspi_transfer_state.*/
+	volatile uint8_t state; /*!< DSPI transfer state, see @ref _dspi_transfer_state.*/
 
-    dspi_master_transfer_callback_t callback; /*!< Completion callback. */
-    void* userData;                           /*!< Callback user data. */
+	dspi_master_transfer_callback_t callback; /*!< Completion callback. */
+	void* userData; /*!< Callback user data. */
 };
 
 
@@ -423,123 +426,125 @@ struct _dspi_master_handle
  * API
  *********************************************************************************************************************/
 
-    /*!
-	 * @name Initialization
-	 * @{
-	 */
+/*!
+ *@name Instance & dummy data
+ * @{
+ */
+uint32_t SPI_GetInstance(SPI_TypeDef* base);
 
-    status_t SPI_MasterInit(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig);
+uint8_t SPI_GetDummyDataInstance(SPI_TypeDef* base);
 
-    status_t SPI_MasterInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig,
-        const GPIO_Pin sck_pin,
-        const GPIO_Pin mosi_pin,
-        const GPIO_Pin miso_pin,
-        const GPIO_Pin cs_pin);
+void SPI_SetDummyData(SPI_TypeDef* base, uint8_t dummyData);
 
-    void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig);
+/*!
+ *@}
+*/
 
-    status_t SPI_SlaveInit(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig);
+/*!
+ * @name Initialization
+ * @{
+ */
 
-    status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
-        const GPIO_Pin sck_pin,
-        const GPIO_Pin mosi_pin,
-        const GPIO_Pin miso_pin,
-        const GPIO_Pin cs_pin);
+status_t SPI_MasterInit(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig);
 
-    void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig);
+status_t SPI_MasterInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig,
+                                const GPIO_Pin sck_pin,
+                                const GPIO_Pin mosi_pin,
+                                const GPIO_Pin miso_pin,
+                                const GPIO_Pin cs_pin);
 
-    /*!
-	 * @}
-	 */
-	
-	
-    /*!
-     * @name Status
-     * @{
-     */
+void SPI_MasterGetDefaultConfig(SPI_InitTypeDef* masterConfig);
 
-    static inline uint32_t SPI_GetStatusFlags(SPI_TypeDef* base)
-    {
-        return (base->STATR);
-    }
+status_t SPI_SlaveInit(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig);
 
-    /*!
-	 * @brief Clears the SPI status flag.
-	 *
-	 * This function  clears the desired status bit by using a write-1-to-clear. The user passes in the base and the
-	 * desired status bit to clear.  The list of status bits is defined in the <b>dspi_status_and_interrupt_request_t</b>.
-	 * The function uses these bit positions in its algorithm to clear the desired flag state. This is an example.
-	 *
-	 * @code
-	 *  SPI_ClearStatusFlags(base, );
-	 * @endcode
-	 *
-	 * @param base DSPI peripheral address.
-	 * @param statusFlags The status flag used from the type dspi_flags.
-	 */
-    static inline void SPI_ClearStatusFlags(SPI_TypeDef* base, uint32_t statusFlags)
-    {
-        base->STATR = statusFlags; /*!< The status flags are cleared by writing 1 (w1c).*/
-    }
+status_t SPI_SlaveInitWithPins(SPI_TypeDef* base, SPI_InitTypeDef* slaveConfig,
+                               const GPIO_Pin sck_pin,
+                               const GPIO_Pin mosi_pin,
+                               const GPIO_Pin miso_pin,
+                               const GPIO_Pin cs_pin);
 
-    /*!
-	*@}
-	 */
+void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig);
 
-	/*!
-	* @name Interrupts
-	* @{
-	*/
-
-    /*! @note Please use WCH APIs to manage SPI interrupts.**/
-	
-	/*!
-	*@}
-	*/
-
-    /*!
-	* @name DMA Control
-	* @{
-	*/
-
-	/*! @note Please use WCH APIs to manage SPI DMA Control. This section waits for further discussion.**/
-
-	/*!
-	*@}
-	*/
-
-    /*!
-	* @name BUS Operations
-	*/
-
-	/*! @note Please use WCH APIs to manage SPI BUS Operations. This section waits for further discussion.**/
-
-    /*!
-	 * @brief Get instance number for DSPI module.
-	 *
-	 * @param base SPI peripheral base address
-	 *
-	 * @return SPI peripheral instance number
-	 */
-    uint32_t SPI_GetInstance(SPI_TypeDef* base);
-	
-	/*!
-	*@}
-	*/
-	
-
-    /*!
-	 * @name Transactional APIs
-	 * @{
-	 */
-
-	
-    /*Transactional APIs -- Master*/
-
-   
+/*!
+ * @}
+ */
 
 
-	
+/*!
+ * @name Status
+ * @{
+ */
+
+static inline uint32_t SPI_GetStatusFlags(SPI_TypeDef* base)
+{
+	return (base->STATR);
+}
+
+/*!
+ * @brief Clears the SPI status flag.
+ *
+ * This function  clears the desired status bit by using a write-1-to-clear. The user passes in the base and the
+ * desired status bit to clear.  The list of status bits is defined in the <b>dspi_status_and_interrupt_request_t</b>.
+ * The function uses these bit positions in its algorithm to clear the desired flag state. This is an example.
+ *
+ * @code
+ *  SPI_ClearStatusFlags(base, );
+ * @endcode
+ *
+ * @param base DSPI peripheral address.
+ * @param statusFlags The status flag used from the type dspi_flags.
+ */
+static inline void SPI_ClearStatusFlags(SPI_TypeDef* base, uint32_t statusFlags)
+{
+	base->STATR = statusFlags; /*!< The status flags are cleared by writing 1 (w1c).*/
+}
+
+/*!
+*@}
+ */
+
+/*!
+* @name Interrupts
+* @{
+*/
+
+/*! @note Please use WCH APIs to manage SPI interrupts.**/
+
+/*!
+*@}
+*/
+
+/*!
+* @name DMA Control
+* @{
+*/
+
+/*! @note Please use WCH APIs to manage SPI DMA Control. This section waits for further discussion.**/
+
+/*!
+*@}
+*/
+
+/*!
+* @name BUS Operations
+*/
+
+/*! @note Please use WCH APIs to manage SPI BUS Operations. This section waits for further discussion.**/
+
+
+/*!
+*@}
+*/
+
+
+/*!
+ * @name Transactional APIs
+ * @{
+ */
+
+
+/*Transactional APIs -- Master*/
+
 
 #if defined(__cplusplus)
 }
@@ -547,5 +552,5 @@ struct _dspi_master_handle
 /*!
  *@}
  */
-	
+
 #endif //HITSIC_CH32V103_MRS_SC_SPI_H
