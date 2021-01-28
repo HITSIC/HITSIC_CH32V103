@@ -17,13 +17,69 @@ extern "C" {
  * Variables
  ******************************************************************************/
 
-static SPI_TypeDef* const s_spiBases[] = {SPI1_BASE, SPI2_BASE};
+static const SPI_TypeDef* s_spiBases[] = {SPI1_BASE, SPI2_BASE};
 
+/* @brief Dummy data for each instance. This data is used when user's tx buffer is NULL*/
+volatile uint8_t g_spiDummyData[ARRAY_SIZE(s_spiBases)] = { 0 };
 
 /**********************************************************************************************************************
  * Code
  *********************************************************************************************************************/
 
+ /*!
+  * @brief Get instance number for SPI module.
+  *
+  * @param base SPI peripheral base address.
+  *
+  * @return instance
+  */
+uint32_t SPI_GetInstance(SPI_TypeDef* base)
+{
+	uint32_t instance;
+
+	/* Find the instance index from base address mappings. */
+	for (instance = 0; instance < ARRAY_SIZE(s_spiBases); instance++)
+	{
+		if (s_spiBases[instance] == base)
+		{
+			break;
+		}
+	}
+
+	assert(instance < ARRAY_SIZE(s_spiBases));  // NOLINT(bugprone-sizeof-expression)
+
+	return instance;
+}
+
+/*!
+ * @brief Dummy data for each instance.
+ *
+ * The purpose of this API is to avoid MISRA rule8.5 : Multiple declarations of
+ * externally-linked object or function g_spiDummyData.
+ *
+ * @param base SPI peripheral base address.
+ *
+ * @return instance
+ */
+uint8_t SPI_GetDummyDataInstance(SPI_TypeDef* base)
+{
+	const uint8_t instance = g_spiDummyData[SPI_GetInstance(base)];
+
+	return instance;
+}
+
+/*!
+ * @brief Set up the dummy data.
+ *
+ * @param base SPI peripheral address.
+ * @param dummyData Data to be transferred when tx buffer is NULL.
+ */
+void SPI_SetDummyData(SPI_TypeDef* base, uint8_t dummyData)
+{
+	const uint32_t instance = SPI_GetInstance(base);
+	g_spiDummyData[instance] = dummyData;
+}
+	
 status_t SPI_MasterInit(SPI_TypeDef* base, SPI_InitTypeDef* masterConfig)
 {
 	/**Init APB Clock**/
@@ -206,33 +262,27 @@ void SPI_SlaveGetDefaultConfig(SPI_InitTypeDef* slaveConfig)
 	slaveConfig->SPI_FirstBit = SPI_FirstBit_MSB;
 	slaveConfig->SPI_CRCPolynomial = 7;
 }
-	
 
 /*!
-* @name BUS Operations
-*/
-	
-uint32_t SPI_GetInstance(SPI_TypeDef* base)
+ * @brief De-initializes the SPI peripheral. Call this API to disable the SPI clock.
+ * @param base SPI peripheral address.
+ */
+void SPI_Deinit(SPI_TypeDef* base)
 {
-	uint32_t instance;
+	SPI_I2S_DeInit(base);
 
-	/* Find the instance index from base address mappings. */
-	for (instance = 0; instance < ARRAY_SIZE(s_spiBases); instance++)
-	{
-		if (s_spiBases[instance] == base)
-		{
-			break;
-		}
-	}
-
-	assert(instance < ARRAY_SIZE(s_spiBases));  // NOLINT(bugprone-sizeof-expression)
-
-	return instance;
+	/* @notes currently no clock control related to this deinit sequence.*/
 }
+	
 
 /*!
 * @name BUS Operations
 */
+	
+
+
+
+
 	
 #if defined(__cplusplus)
 }

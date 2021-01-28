@@ -17,31 +17,35 @@
  * @{
  */
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /*_cplusplus*/
+
  /**********************************************************************************************************************
   * Definitions
   *********************************************************************************************************************/
 
   /*! @name Driver version */
   /*@{*/
-  /*! @brief DSPI driver version 2.2.4. */
+  /*! @brief SPI driver version 2.2.4. */
 #define WCH_SPI_DRIVER_VERSION (MAKE_VERSION(1, 0, 0))
 /*@}*/
 
-#ifndef DSPI_DUMMY_DATA
+#ifndef SPI_DUMMY_DATA
 /*! @brief DSPI dummy data if there is no Tx data.*/
-#define DSPI_DUMMY_DATA (0x00U) /*!< Dummy data used for Tx if there is no txData. */
+#define SPI_DUMMY_DATA (0x00U) /*!< Dummy data used for Tx if there is no txData. */
 #endif
 
 /*! @brief Global variable for dummy data value setting. */
-extern volatile uint8_t g_dspiDummyData[];
+extern volatile uint8_t g_spiDummyData[];
 
 /*! @brief Status for the DSPI driver.*/
 enum
 {
-    kStatus_DSPI_Busy = MAKE_STATUS(kStatusGroup_DSPI, 0), /*!< DSPI transfer is busy.*/
-    kStatus_DSPI_Error = MAKE_STATUS(kStatusGroup_DSPI, 1), /*!< DSPI driver error. */
-    kStatus_DSPI_Idle = MAKE_STATUS(kStatusGroup_DSPI, 2), /*!< DSPI is idle.*/
-    kStatus_DSPI_OutOfRange = MAKE_STATUS(kStatusGroup_DSPI, 3)  /*!< DSPI transfer out of range. */
+    kStatus_SPI_Busy = MAKE_STATUS(kStatusGroup_DSPI, 0), /*!< DSPI transfer is busy.*/
+    kStatus_SPI_Error = MAKE_STATUS(kStatusGroup_DSPI, 1), /*!< DSPI driver error. */
+    kStatus_SPI_Idle = MAKE_STATUS(kStatusGroup_DSPI, 2), /*!< DSPI is idle.*/
+    kStatus_SPI_OutOfRange = MAKE_STATUS(kStatusGroup_DSPI, 3)  /*!< DSPI transfer out of range. */
 };
 
 #if HITSIC_PORTING_SPI
@@ -418,9 +422,6 @@ struct _dspi_master_handle
 /**********************************************************************************************************************
  * API
  *********************************************************************************************************************/
-#if defined(__cplusplus)
-extern "C" {
-#endif /*_cplusplus*/
 
     /*!
 	 * @name Initialization
