@@ -3,12 +3,14 @@ project(HITSIC_CH32V103_MRS)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(.)
 include_directories(board)
 include_directories(component)
 include_directories(Core)
 include_directories(device)
 include_directories(drivers)
 include_directories(sc_library)
+include_directories(source)
 
 add_executable(HITSIC_CH32V103_MRS
         board/board.c
@@ -61,17 +63,17 @@ add_executable(HITSIC_CH32V103_MRS
         drivers/ch32v10x_usb_host.h
         drivers/ch32v10x_wwdg.c
         drivers/ch32v10x_wwdg.h
+        sc_library/sc_common.cpp
+        sc_library/sc_common.h
+        sc_library/sc_gpio.c
+        sc_library/sc_gpio.h
+        sc_library/sc_i2c.c
+        sc_library/sc_i2c.h
+        sc_library/sc_spi.c
+        sc_library/sc_spi.h
+        sc_library/sc_uart.c
+        sc_library/sc_uart.h
+        sc_library/sc_unit_test.h
         source/isr.c
         source/main.cpp
-        source/syscalls.c
-        sc_library/sc_common.h
-        sc_library/sc_common.cpp
-        sc_library/sc_spi.cpp
-        sc_library/sc_spi.h
-        sc_library/sc_i2c.cpp
-        sc_library/sc_i2c.h
-        sc_library/sc_uart.c
-        sc_library/sc_uart.h 
-        sc_library/sc_gpio.c 
-        sc_library/sc_gpio.h 
-        sc_library/sc_unit_test.h)
+        source/syscalls.c)
