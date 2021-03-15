@@ -1,0 +1,3 @@
+[submodule "HITSIC_CH32V103_MRS/HITSIC_Module"]
+	path = HITSIC_CH32V103_MRS/HITSIC_Module
+	url = https://github.com/HITSIC/HITSIC_Module
