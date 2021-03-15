@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 - 2020 HITSIC
+ * Copyright 2018 - 2021 HITSIC
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,32 +17,11 @@
 #include "board.h"
 #include "debug.h"
 
-#include "ch32v10x.h"
-#include "ch32v10x_adc.h"
-#include "ch32v10x_bkp.h"
-#include "ch32v10x_crc.h"
-#include "ch32v10x_dbgmcu.h"
-#include "ch32v10x_dma.h"
-#include "ch32v10x_exti.h"
-#include "ch32v10x_flash.h"
-#include "ch32v10x_gpio.h"
-#include "ch32v10x_i2c.h"
-#include "ch32v10x_iwdg.h"
-#include "ch32v10x_pwr.h"
-#include "ch32v10x_rcc.h"
-#include "ch32v10x_rtc.h"
-#include "ch32v10x_spi.h"
-#include "ch32v10x_tim.h"
-#include "ch32v10x_usart.h"
-#include "ch32v10x_wwdg.h"
-#include "ch32v10x_usb.h"
-#include "ch32v10x_usb_host.h"
-#include "ch32v10x_misc.h"
-
-#include "sc_uart.h"
-#include "sc_gpio.h"
+#include "../HITSIC_Module/d_ch32v103/hitsic_common.h"
 
 #include "vector"
+
+std::vector<int> abc;
 
 #include "sc_unit_test.h"
 
@@ -72,7 +51,7 @@ extern "C" int main(void)
     /** C++ 底层初始化 */
     /*
      * @note ResetISR似乎没有进行构造操作，我们手动进行。
-    */
+     */
 	__libc_init_array();
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
@@ -91,6 +70,9 @@ extern "C" int main(void)
     GPIO_InitTypeDef config;
     GPIO_GetDefaultConfig_Output(&config);
     GPIO_QuickInit(B15,kGPIO_DigitalOutput,1,&config);
+
+
+    abc[0] = 3;
 
 	while(1)
     {
